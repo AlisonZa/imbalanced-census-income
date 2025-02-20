@@ -113,8 +113,6 @@ Dataframe dimensions 32561 rows × 15 columns
 </div>
 
 
-
-
 ## Data Quality
 
 * Dataset has 1 duplicate rows (0.1%); **[1]**
