@@ -35,7 +35,7 @@ class EnvironmentConfiguration(BaseModel):
     artifacts_folder: str = os.path.join("artifacts")
 
     # Data
-    raw_data_folder: str = os.path.join("raw_data", "CC GENERAL.csv")
+    raw_data_folder: str = os.path.join(artifacts_folder, "raw_data", "adult.csv")
 
     # Exploratory Data Analysys
     eda_folder: str = os.path.join(artifacts_folder, "exploratory_data_analysys")
