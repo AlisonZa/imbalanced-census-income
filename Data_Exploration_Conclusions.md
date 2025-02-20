@@ -4,28 +4,27 @@ All the base for this report is found in the `artifacts/exploratory_data_analysy
 
 This data was extracted from the [1994 Census bureau database](http://www.census.gov/en.html) by Ronny Kohavi and Barry Becker (Data Mining and Visualization, Silicon Graphics). A set of reasonably clean records was extracted using the following conditions: ((AAGE>16) && (AGI>100) && (AFNLWGT>1) && (HRSWK>0)).  *The prediction task is to determine whether a person makes over $50K a year* .
 
-| FEATURE        | CLASSIFICATION      |
-| -------------- | ------------------- |
-| age            | numeric             |
+| FEATURE        |      CLASSIFICATION |
+| :------------- | ------------------: |
+| age            |             numeric |
 | workclass      | categorical-nominal |
-| fnlwgt         | numeric             |
+| fnlwgt         |             numeric |
 | education      | categorical-ordinal |
 | education.num  | categorical-ordinal |
 | marital.status | categorical-nominal |
 | occupation     | categorical-nominal |
 | relationship   | categorical-nominal |
 | race           | categorical-nominal |
-| sex            | categorical-binary  |
-| capital.gain   | numeric             |
-| capital.loss   | numeric             |
-| hours.per.week | numeric             |
+| sex            |  categorical-binary |
+| capital.gain   |             numeric |
+| capital.loss   |             numeric |
+| hours.per.week |             numeric |
 | native.country | categorical-nominal |
-| income         | binary_target       |
+| income         |       binary-target |
 
 Dataframe dimensions 32561 rows × 15 columns
 
 ## **Summary Statistics**
-
 
 <table border="1" class="dataframe">
   <thead>
@@ -146,31 +145,28 @@ Dataframe dimensions 32561 rows × 15 columns
 
 * Target is imbalanced   **[2];**
 
-#### Distributions [5]
+#### Distributions
 
-asSkewness
 
 
 ### Bi-Variate
 
-* Nothing much important,s most of relationships are described in correlations.
 
-### Correlations
+### Correlations [4]
 
-* There are several columns that are highly correlated between themselves **[6]**:
-
+![1740083957699](image/Data_Exploration_Conclusions/1740083957699.png)
 
 ## Conclusions
 
 * **[2]** Binary target is imbalanced, metric and model chooses should consider that (**apply the imbalanced learning framework**)
 
-## Processment Ideas
+### Processment Ideas
 
 * **[1]** Drop duplicate rows;
-* Drop feature education (education.num) already has this information encoded.
-* Encode a categorical-nominals (do this in a way to avoid multicorrelation)
-* Create a feature to represent the difference between capital.gain and capital.loss
-* Create a feature to represent if the citzen is american or immigrant
-* Change income labels to 0 and 1, Change sex labels to 0 and 1
-* **[2]** Use some resampling technique to improve the model's performance
-* **[3]** Apply some sort of scaler
+* Drop feature education (education.num) already has this information encoded **[4]**;
+* Encode a categorical-nominals (do this in a way to avoid multicorrelation);
+* Create a feature to represent the difference between capital.gain and capital.loss;
+* Create a feature to represent if the citzen is american or immigrant;
+* Change income labels to 0 and 1, Change sex labels to 0 and 1;
+* **[2]** Use some resampling technique to improve the model's performance;
+* **[3]** Apply some sort of scaler;
