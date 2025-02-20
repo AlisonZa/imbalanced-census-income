@@ -1,0 +1,16 @@
+ipykernel
+scikit-learn
+matplotlib
+pydantic
+pandas
+seaborn
+numpy
+featuretools
+ydata-profiling==4.12.0
+openpyxl
+joblib
+missingpy
+MissForest
+lightgbm
+hdbscan
+
