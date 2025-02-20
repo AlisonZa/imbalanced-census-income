@@ -142,8 +142,9 @@ Dataframe dimensions 32561 rows × 15 columns
 
 ### Univariate
 
-* Target is imbalanced   **[2];**
+The plots are avaiable at: `artifacts\exploratory_data_analysys\plots\univariate`
 
+* Target is imbalanced   **[2];**
 
 | FEATURE        | SKEWNESS  | DISTRIBUITION                                                                      | OBSERVATION                                                                                            | HAS OUTLIERS [5] |
 | -------------- | --------- | ---------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ | ---------------- |
@@ -163,12 +164,23 @@ Dataframe dimensions 32561 rows × 15 columns
 | income         | N/A       | Bernoulli                                                                          | [24% >50k ] and [76% <= 50k] High imbalance [2]                                                        | N/A              |
 
 
-
 ### Bi-Variate
 
-### Correlations [4]
+* Higher incomes become more frequent with age but are concentrated in middle age rather than old age.
+
+![1740094417773](image/Data_Exploration_Conclusions/1740094417773.png)
+
+* Most people on the group of <= 50k income are from 9th education group, while most people on the >50k education group are on the 13th education group
+  ![1740094647027](image/Data_Exploration_Conclusions/1740094647027.png)
+* The proportion of men and women seems to change from the different income groups (The proportion seems to favor men)
+
+  ![1740094792639](image/Data_Exploration_Conclusions/1740094792639.png)
+
+#### Correlations [4]
 
 ![1740083957699](image/Data_Exploration_Conclusions/1740083957699.png)
+
+There are no data transformation insight from the correlation matrix, except delete the `education` feature
 
 ## Conclusions
 
