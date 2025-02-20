@@ -111,7 +111,6 @@ Dataframe dimensions 32561 rows × 15 columns
 </table>
 </div>
 
-
 ## Data Quality
 
 * Dataset has 1 duplicate rows (0.1%); **[1]**
@@ -145,12 +144,27 @@ Dataframe dimensions 32561 rows × 15 columns
 
 * Target is imbalanced   **[2];**
 
-#### Distributions
+
+| FEATURE        | SKEWNESS  | DISTRIBUITION                                                                      | OBSERVATION                                                                                            | HAS OUTLIERS [5] |
+| -------------- | --------- | ---------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ | ---------------- |
+| age            | 0.558718  | Rouglhy Gaussian                                                                   | Right Skewed                                                                                           | Several          |
+| workclass      | N/A       | Most Employes are from Private (69.7%), <br />followed by Self-emp-not-inc (7.8%) | Highly Imbalancement between classes                                                                   | N/A              |
+| fnlwgt         | 1.446913  | Rouglhy Gaussian                                                                   | Right Skewed                                                                                           | Several          |
+| education.num  | N/A       | Roughly Gaussian                                                                   | Most people are in 9, 10 and 13 education level                                                        | N/A              |
+| marital.status | N/A       | N/A                                                                                | Most people (about 80%) Married-civ-spouse or never married                                            | N/A              |
+| occupation     | N/A       | N/A                                                                                | Relatively well distributed across 6 different occupations                                             | N/A              |
+| relationship   | N/A       | N/A                                                                                | 40.5% are Husband and 25.5% are not in family                                                          | N/A              |
+| race           | N/A       | N/A                                                                                | About 86% White, highly imbalanced                                                                     | N/A              |
+| sex            | N/A       | Bernoulli                                                                          | 66.9% Male the 33.1% Female, highly imbalanced                                                         | N/A              |
+| capital.gain   | 11.953297 | Not Gaussian                                                                       | Most people do not have capital gain                                                                   | Several          |
+| capital.loss   | 4.594417  | Not Gaussian                                                                       | Most people do not have capital loss                                                                   | Several          |
+| hours.per.week | 0.227632  | Rouglhy Gaussian, with small tails                                                 | Greate concentration around median                                                                     | Several          |
+| native.country | N/A       | N/A                                                                                | Most people (about 90%) areamerican, the <br />rest is distributed across a lot of different countries | N/A              |
+| income         | N/A       | Bernoulli                                                                          | [24% >50k ] and [76% <= 50k] High imbalance [2]                                                        | N/A              |
 
 
 
 ### Bi-Variate
-
 
 ### Correlations [4]
 
@@ -166,7 +180,9 @@ Dataframe dimensions 32561 rows × 15 columns
 * Drop feature education (education.num) already has this information encoded **[4]**;
 * Encode a categorical-nominals (do this in a way to avoid multicorrelation);
 * Create a feature to represent the difference between capital.gain and capital.loss;
+* Create a feature to represent if the person has any capital gain (investors)
 * Create a feature to represent if the citzen is american or immigrant;
 * Change income labels to 0 and 1, Change sex labels to 0 and 1;
 * **[2]** Use some resampling technique to improve the model's performance;
 * **[3]** Apply some sort of scaler;
+* **[5]** There are some outliers, must apply a scaler that is robust to them
