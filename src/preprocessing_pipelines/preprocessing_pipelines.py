@@ -1,7 +1,58 @@
 from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler
-from missforest import MissForest
 import pandas as pd
-from featuretools.selection import remove_highly_correlated_features
+
+
+import pandas as pd
+
+def common_data_preprocessing(df):
+    """
+    Preprocess the input dataframe by performing several transformations:
+    
+    1. Drop the 'education' column (redundant since 'education.num' encodes the same information).
+    2. Encode nominal categorical features using one-hot encoding while avoiding multicollinearity 
+       (i.e., using dummy encoding with drop_first=True).
+    3. Create a new feature 'profit' as the difference between 'capital.gain' and 'capital.loss'.
+    4. Create a new binary feature 'investor' indicating if the person has any capital gain 
+       (1 if capital.gain > 0, else 0).
+    5. Create a new binary feature 'american' indicating if the person is a U.S. citizen 
+       (1 if native.country equals 'United-States', else 0).
+    6. Map the 'income' column to binary labels (0 for '<=50K' and 1 for '>50K').
+    7. Map the 'sex' column to binary labels (0 for 'Female' and 1 for 'Male').
+    8. One-hot encode the categorical-nominal features: workclass, marital.status, occupation, 
+       relationship, and race (excluding native.country, already encoded as 'american').
+    
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        The input dataframe containing the dataset with relevant columns.
+    
+    Returns
+    -------
+    pandas.DataFrame
+        The preprocessed dataframe with new features and encoded categorical variables.
+    """
+    # Drop redundant column
+    df.drop('education', axis=1, inplace=True)
+    
+    # Encode binary categorical variables
+    df['income'] = df['income'].map({'<=50K': 0, '>50K': 1})
+    df['sex'] = df['sex'].map({'Female': 0, 'Male': 1})
+    
+    # Create new features
+    df['profit'] = df['capital.gain'] - df['capital.loss']
+    df['investor'] = (df['capital.gain'] > 0).astype(int)
+    df['american'] = (df['native.country'] == 'United-States').astype(int)
+    
+    # Drop the original 'native.country' column, because it will make our dataset much more sparse
+    df.drop('native.country', axis=1, inplace=True)
+    
+    # List of categorical-nominal features to encode
+    categorical_nominals = ['workclass', 'marital.status', 'occupation', 'relationship', 'race']
+    
+    # One-hot encode categorical-nominal features while avoiding multicollinearity
+    df = pd.get_dummies(df, columns=categorical_nominals, drop_first=True, dtype=int)
+    
+    return df
 
 
 def standard_scale_dataframe(df):
@@ -169,92 +220,4 @@ def drop_highly_correlated_features(df, threshold=0.85):
     reduced_df = remove_highly_correlated_features(df_copy, pct_corr_threshold=threshold)
     
     return reduced_df
-
-def apply_transformations_v2(df, columns=None, epsilon=1e-10):
-    """
-    Apply various log and power transformations to specified columns in a dataframe.
-    Returns a single dataframe with all transformations as new columns.
-    
-    Parameters:
-    -----------
-    df : pandas.DataFrame
-        Input dataframe
-    columns : list, optional
-        List of columns to transform. If None, transforms all numeric columns
-    epsilon : float, optional
-        Small constant to add to handle zeros and negative values
-        
-    Returns:
-    --------
-    pandas.DataFrame : Original dataframe with additional columns for each transformation
-    """
-    
-    # Create a copy of the dataframe
-    result_df = df.copy()
-    
-    # If no columns specified, use all numeric columns
-    if columns is None:
-        columns = result_df.select_dtypes(include=['float64', 'int64']).columns
-    
-    # Apply transformations
-    for col in columns:
-        # Store column values for reuse
-        col_values = result_df[col].values
-        abs_values = np.abs(col_values)
-        signs = np.sign(col_values)
-        
-        # Log transformations
-        # 1. Natural log transformation (ln(x + epsilon))
-        result_df[f'{col}_ln'] = np.log(abs_values + epsilon)
-        
-        # 2. Log10 transformation
-        result_df[f'{col}_log10'] = np.log10(abs_values + epsilon)
-        
-        # 3. Log1p transformation (ln(x + 1))
-        result_df[f'{col}_log1p'] = np.log1p(abs_values)
-        
-        # 4. Signed log transformation (maintains sign of original data)
-        result_df[f'{col}_signed_log'] = signs * np.log(abs_values + epsilon)
-        
-        # 5. Box-Cox-like transformation for positive values
-        result_df[f'{col}_boxcox'] = np.zeros_like(col_values)
-        positive_mask = col_values > 0
-        result_df.loc[positive_mask, f'{col}_boxcox'] = np.log(result_df.loc[positive_mask, col])
-        
-        # 6. Symmetrical log transformation
-        result_df[f'{col}_symlog'] = signs * np.log1p(abs_values)
-        
-        # Power transformations
-        # 7. Square root transformation (preserving signs)
-        result_df[f'{col}_sqrt'] = signs * np.sqrt(abs_values)
-        
-        # 8. Cube root transformation (handles negative values naturally)
-        result_df[f'{col}_cbrt'] = np.cbrt(col_values)
-        
-        # 9. Square transformation
-        result_df[f'{col}_square'] = np.square(col_values)
-        
-        # 10. Inverse transformation (1/x)
-        with np.errstate(divide='ignore', invalid='ignore'):
-            inverse_values = np.where(abs_values < epsilon, 
-                                    signs * (1/epsilon), 
-                                    signs * (1/(abs_values + epsilon)))
-        result_df[f'{col}_inverse'] = inverse_values
-        
-        # 11. Yeo-Johnson transformation
-        lambda_param = 0.5
-        pos_mask = col_values >= 0
-        neg_mask = ~pos_mask
-        
-        result_df[f'{col}_yeojohnson'] = np.zeros_like(col_values)
-        
-        # Transform positive values
-        pos_values = ((np.power(col_values[pos_mask] + 1, lambda_param) - 1) / lambda_param)
-        result_df.loc[pos_mask, f'{col}_yeojohnson'] = pos_values
-        
-        # Transform negative values
-        neg_values = -(np.power(-col_values[neg_mask] + 1, 2-lambda_param) - 1) / (2-lambda_param)
-        result_df.loc[neg_mask, f'{col}_yeojohnson'] = neg_values
-        
-    return result_df
 

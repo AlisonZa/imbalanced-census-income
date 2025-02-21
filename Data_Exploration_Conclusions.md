@@ -1,4 +1,4 @@
-# Report
+# Exploratory Data Analysys Report
 
 All the base for this report is found in the `artifacts/exploratory_data_analysys` folder. Please, make sure to check this folder
 
@@ -113,7 +113,7 @@ Dataframe dimensions 32561 rows × 15 columns
 
 ## Data Quality
 
-* Dataset has 1 duplicate rows (0.1%); **[1]**
+* Dataset has 23 duplicate rows (0.1%); **[1]**
 * There are no Missing Values;
 * According to the unique values spreadsheet, there are no strange values;
 * There are data within different scales **[3]**
@@ -171,7 +171,8 @@ The plots are avaiable at: `artifacts\exploratory_data_analysys\plots\univariate
 ![1740094417773](image/Data_Exploration_Conclusions/1740094417773.png)
 
 * Most people on the group of <= 50k income are from 9th education group, while most people on the >50k education group are on the 13th education group
-  ![1740094647027](image/Data_Exploration_Conclusions/1740094647027.png)
+
+  ![1740095211324](image/Data_Exploration_Conclusions/1740095211324.png)
 * The proportion of men and women seems to change from the different income groups (The proportion seems to favor men)
 
   ![1740094792639](image/Data_Exploration_Conclusions/1740094792639.png)
@@ -191,10 +192,25 @@ There are no data transformation insight from the correlation matrix, except del
 * **[1]** Drop duplicate rows;
 * Drop feature education (education.num) already has this information encoded **[4]**;
 * Encode a categorical-nominals (do this in a way to avoid multicorrelation);
-* Create a feature to represent the difference between capital.gain and capital.loss;
-* Create a feature to represent if the person has any capital gain (investors)
+* Create a feature to represent the difference between capital.gain and capital.loss(profit);
+* Create a feature to represent if the person has any capital.gain (investors)
 * Create a feature to represent if the citzen is american or immigrant;
 * Change income labels to 0 and 1, Change sex labels to 0 and 1;
 * **[2]** Use some resampling technique to improve the model's performance;
-* **[3]** Apply some sort of scaler;
 * **[5]** There are some outliers, must apply a scaler that is robust to them
+
+# Imbalanced Learning Framework
+
+## Metrics
+
+Regular Metrics can be misleading when we are dealing with imbalanced datasets. For this business problem we have the following situation:
+
+* We want to predict crisp labels (not probabilities);
+* The positive class is more important (Possible leads)
+* False negatives are more costly (Losing a high purchase power lead is worse than trying to sale for a low purchase power lead)
+
+According to this situation we should Choose the **F2-Score metric**
+
+The F2-score places greater emphasis on recall, ensuring that we capture as many valuable leads as possible, even at the expense of some false positives. This makes it a better fit than F1-score, which balances precision and recall equally, or accuracy, which does not account for class importance.
+
+![1740095897796](image/Data_Exploration_Conclusions/1740095897796.png)
