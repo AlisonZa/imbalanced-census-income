@@ -2,7 +2,7 @@ import os
 import numpy as np
 import pandas as pd
 import copy
-from sklearn.pipeline import Pipeline
+from imblearn.pipeline import Pipeline
 from sklearn.model_selection import cross_validate
 
 def cross_validate_models(base_pipeline, model_list, X, y, scoring, cv, report_path):

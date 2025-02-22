@@ -15,4 +15,5 @@ lightgbm
 hdbscan
 scipy
 imbalanced-learn
+xgboost
 
